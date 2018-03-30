@@ -7,10 +7,10 @@
 @time: 18-3-30 下午1:32
 """
 
-__all__ = ["Ejson"]
+__all__ = ["EasyQueryjson"]
 
 
-class Ejson(object):
+class EasyQueryjson(object):
     """
     通用的字符串语法类获取、更改、添加json的值
 

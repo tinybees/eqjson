@@ -7,4 +7,6 @@
 @time: 18-3-30 下午1:32
 """
 
-from .ejson import *
+from .eqjson import *
+
+__version__ = "1.0.0a0"

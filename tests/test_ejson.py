@@ -9,7 +9,7 @@
 import json
 import unittest
 
-from ejson import Ejson
+from eqjson import EasyQueryjson
 
 
 class TestEjson1(unittest.TestCase):
@@ -21,7 +21,7 @@ class TestEjson1(unittest.TestCase):
     def setUpClass(cls):
         with open("json_test_1.json") as f:
             json_doc = json.load(f)
-        cls.ejson_obj = Ejson(json_doc)
+        cls.ejson_obj = EasyQueryjson(json_doc)
 
     def test_101_get_first_tier(self, ):
         """
@@ -124,7 +124,7 @@ class TestEjson2(unittest.TestCase):
     def setUpClass(cls):
         with open("json_test_2.json") as f:
             json_doc = json.load(f)
-        cls.ejson_obj = Ejson(json_doc)
+        cls.ejson_obj = EasyQueryjson(json_doc)
 
     def test_101_get_first_tier(self, ):
         """
@@ -227,7 +227,7 @@ class TestEjson3(unittest.TestCase):
     def setUpClass(cls):
         with open("json_test_3.json") as f:
             json_doc = json.load(f)
-        cls.ejson_obj = Ejson(json_doc)
+        cls.ejson_obj = EasyQueryjson(json_doc)
 
     def test_101_get_first_tier(self, ):
         """

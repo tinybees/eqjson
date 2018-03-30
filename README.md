@@ -4,7 +4,7 @@ An smart json,similar to the jquery, read and update the json data.
 一个小巧的、完全无依赖的类似jquery写法的读取和更改json的工具，可以按照json的层级或者某个属性读取json数据。
 
 ## Installing aelog
-- ```pip install ejson```
+- ```pip install eqjson```
 
 ## Usage
 假如json数据如下：
@@ -36,6 +36,20 @@ An smart json,similar to the jquery, read and update the json data.
       }
    }
 ]
+```
+```
+from eqjson import EasyQueryjson
+
+# 实例化
+ejson_obj = EasyQueryjson(json_doc)
+# 查询
+ejson_obj.get_value_from_path("object.name")
+ejson_obj.get_value_from_path("object.valueAsString.0")
+# update
+ejson_obj.change_value("object.name", "updatename")
+ejson_obj.change_value("object.value.2", ["five", "four"])
+
+# 具体的查询参数详情如下
 ```
 #### 基本用法：
 - 如果要获取name值：则写法为```0.object.name```
