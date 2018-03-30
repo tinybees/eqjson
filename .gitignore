@@ -84,6 +84,7 @@ celerybeat-schedule
 
 # virtualenv
 .venv
+.idea/
 venv/
 ENV/
 
@@ -99,3 +100,10 @@ ENV/
 
 # mypy
 .mypy_cache/
+将删除 .idea/dbnavigator.xml
+将删除 .idea/ejson-query.iml
+将删除 .idea/encodings.xml
+将删除 .idea/inspectionProfiles/
+将删除 .idea/misc.xml
+将删除 .idea/modules.xml
+将删除 .idea/workspace.xml

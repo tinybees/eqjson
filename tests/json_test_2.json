@@ -1,0 +1,45 @@
+[{
+    "id": 1123123812831823,
+    "object": {
+      "name": "myLittleObject",
+      "type": "list",
+      "valueAsString": [
+        "one",
+        "two"
+      ],
+      "value": [
+        {
+          "key": "value1"
+        },
+        {
+          "key": "value2"
+        },
+        {
+          "key": "value3"
+        }
+      ]
+    }
+  },
+  {
+    "id": 123456,
+    "object": {
+      "name": "myLittleObject",
+      "type": "list",
+      "valueAsString": [
+        "one",
+        "two"
+      ],
+      "value": [
+        {
+          "key": "value1"
+        },
+        {
+          "key": "value2"
+        },
+        {
+          "key": "value3"
+        }
+      ]
+    }
+  }
+]
