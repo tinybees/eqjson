@@ -71,4 +71,4 @@ ejson_obj.remove_value("object.value")
 
 
 ## 单测
-- 100%文件覆盖率，77%的行覆盖率
+- 100%文件覆盖率，92%的行覆盖率
