@@ -43,11 +43,17 @@ from eqjson import EasyQueryjson
 # 实例化
 ejson_obj = EasyQueryjson(json_doc)
 # 查询
-ejson_obj.get_value_from_path("object.name")
-ejson_obj.get_value_from_path("object.valueAsString.0")
+ejson_obj.get_value("object.name")
+ejson_obj.get_value("object.valueAsString.0")
 # update
 ejson_obj.change_value("object.name", "updatename")
 ejson_obj.change_value("object.value.2", ["five", "four"])
+# add
+ejson_obj.append_value("object.valueAsString", "three")
+ejson_obj.append_value("object.valueA", {"test":456})
+# remove
+ejson_obj.remove_value("object.valueAsString")
+ejson_obj.remove_value("object.value")
 
 # 具体的查询参数详情如下
 ```

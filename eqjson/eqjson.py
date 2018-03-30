@@ -29,7 +29,76 @@ class EasyQueryjson(object):
         """
         self.json_obj = json_obj
 
-    def _get_value_from_path(self, path, json_obj=None):
+    def get_value(self, path):
+        """
+        通过通用的path寻址来获得对应的值
+        Args:
+            path
+        Returns:
+
+        """
+        if "[" in path and "]" in path:
+            return self._get_value_by_attr(path)
+        else:
+            return self._get_value(path)
+
+    def change_value(self, path, value):
+        """
+        通过path和value来改变path对应的值
+        Args:
+            path
+            value
+
+        Returns:
+
+        """
+        json_value = self.get_value(path)
+        cutted_path = path.rsplit('.', 1)[0]
+        parent_json_value = self.get_value(cutted_path)
+
+        # 对更改json的值做校验，防止改错
+        if isinstance(parent_json_value, dict) or path == cutted_path:
+            if self._is_value(json_value) and self._is_value(value):
+                self._set_value(path, self._change_value_type(json_value, value))
+            elif isinstance(value, list) and isinstance(json_value, list):
+                self._set_value(path, value)
+            elif isinstance(value, dict) and isinstance(json_value, dict):
+                self._set_value(path, value)
+            else:
+                raise ValueError("更改的值{0}和模板中的值{1}的类型不一致,请检查!".format(type(value), type(json_value)))
+        elif isinstance(parent_json_value, list):
+            self._set_value(path, value)
+
+    def remove_value(self, path):
+        """
+        通过path删除对应json节点的值
+        Args:
+            path
+
+        Returns:
+
+        """
+        self._set_value(path, None)
+
+    def append_value(self, path, value):
+        """
+        通过path和value来添加path对应的值
+        Args:
+            path
+            value
+
+        Returns:
+
+        """
+        json_value = self.get_value(path)
+        if isinstance(json_value, list):
+            json_value.append(value)
+        elif isinstance(json_value, dict):
+            self._append_entry(json_value, value)
+        else:
+            raise ValueError("基本类型值{0} {1}无法进行添加操作".format(json_value, type(json_value)))
+
+    def _get_value(self, path, json_obj=None):
         """
         通过通用的path寻址来获得对应的值
         Args:
@@ -60,24 +129,6 @@ class EasyQueryjson(object):
         else:
             raise ValueError("添加的值{0}和模板中的值{1}的类型不一致".format(type(value), type(json_value)))
 
-    def append_value(self, path, value):
-        """
-        通过path和value来添加path对应的值
-        Args:
-            path
-            value
-
-        Returns:
-
-        """
-        json_value = self.get_value_from_path(path)
-        if isinstance(json_value, list):
-            json_value.append(value)
-        elif isinstance(json_value, dict):
-            self._append_entry(json_value, value)
-        else:
-            raise ValueError("基本类型值{0} {1}无法进行添加操作".format(json_value, type(json_value)))
-
     @staticmethod
     def _change_value_type(src_value, value):
         """
@@ -92,44 +143,6 @@ class EasyQueryjson(object):
         except ValueError:
             return value
 
-    def change_value(self, path, value):
-        """
-        通过path和value来改变path对应的值
-        Args:
-            path
-            value
-
-        Returns:
-
-        """
-        json_value = self.get_value_from_path(path)
-        cutted_path = path.rsplit('.', 1)[0]
-        parent_json_value = self.get_value_from_path(cutted_path)
-
-        # 对更改json的值做校验，防止改错
-        if isinstance(parent_json_value, dict) or path == cutted_path:
-            if self._is_value(json_value) and self._is_value(value):
-                self._set_value(path, self._change_value_type(json_value, value))
-            elif isinstance(value, list) and isinstance(json_value, list):
-                self._set_value(path, value)
-            elif isinstance(value, dict) and isinstance(json_value, dict):
-                self._set_value(path, value)
-            else:
-                raise ValueError("更改的值{0}和模板中的值{1}的类型不一致,请检查!".format(type(value), type(json_value)))
-        elif isinstance(parent_json_value, list):
-            self._set_value(path, value)
-
-    def remove_value(self, path):
-        """
-        通过path删除对应json节点的值
-        Args:
-            path
-
-        Returns:
-
-        """
-        self._set_value(path, None)
-
     def _set_value(self, path, value):
         """
         更改值的实际方法,更改值测试过了，删除值没有测试过
@@ -142,7 +155,7 @@ class EasyQueryjson(object):
         """
         if path.count('.') >= 1:
             cutted_path = path.rsplit('.', 1)
-            obj = self.get_value_from_path(cutted_path[0])
+            obj = self.get_value(cutted_path[0])
             if isinstance(obj, dict):
                 if value is None:
                     del obj[cutted_path[1]]
@@ -274,7 +287,7 @@ class EasyQueryjson(object):
         """
         path = path.replace(" ", "")
         pre_path = path[:path.index("[")]
-        pre_node_val = self._get_value_from_path(pre_path, json_obj)
+        pre_node_val = self._get_value(pre_path, json_obj)
 
         if isinstance(pre_node_val, list):
             attr_path = path[path.index("[") + 1:path.index("]")]
@@ -293,7 +306,7 @@ class EasyQueryjson(object):
         else:
             return pre_node_val
 
-    def _get_value_from_path_by_attr(self, path):
+    def _get_value_by_attr(self, path):
         """
         通过path中的属性获取由属性确定的节点，目前每层节点能指定一个或多个属性，可以在多层节点上指定属性
         Args:
@@ -307,24 +320,11 @@ class EasyQueryjson(object):
             left_path = path[:path.index("]") + 1]
             after_path = path[path.index("]") + 1:].strip(".")
             json_obj = self._get_val_from_unordered_list_by_unique_val(json_obj, left_path)
-            return self._get_value_from_path(after_path, json_obj) if after_path else json_obj
+            return self._get_value(after_path, json_obj) if after_path else json_obj
         else:
             after_path = path
             for _ in range(after_path.count("]")):
                 left_path = after_path[:after_path.index("]") + 1]
                 json_obj = self._get_val_from_unordered_list_by_unique_val(json_obj, left_path)
                 after_path = after_path[after_path.index("]") + 1:].strip(".")
-            return self._get_value_from_path(after_path, json_obj) if after_path else json_obj
-
-    def get_value_from_path(self, path):
-        """
-        通过通用的path寻址来获得对应的值
-        Args:
-            path
-        Returns:
-
-        """
-        if "[" in path and "]" in path:
-            return self._get_value_from_path_by_attr(path)
-        else:
-            return self._get_value_from_path(path)
+            return self._get_value(after_path, json_obj) if after_path else json_obj
